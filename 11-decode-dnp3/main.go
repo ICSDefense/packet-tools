@@ -202,17 +202,6 @@ type ApplicationLayer struct {
 		Sequence    int
 	}
 	Function string `json:"Function Code"`
-	IINCode  string `json:"Internal Indication (IIN)"`
-}
-
-type DNP3AppObject struct {
-	Group      int
-	Variation  int
-	Qualifier  int
-	RangeStart int
-	RangeStop  int
-	DataType   int
-	Length     int
 }
 
 func main() {
@@ -252,6 +241,7 @@ func DNP3Decode(packet gopacket.Packet) {
 		dataByte = applicationLayer.Payload()
 		// dataStr = hex.EncodeToString(applicationLayer.Payload())
 		d := &DNP3{}
+
 		d.checkLength(dataByte)
 		d.ifDNP3(dataByte[0:2])
 		d.setDataLinkLayer(dataByte)

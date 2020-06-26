@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/hex"
+	"flag"
 	"fmt"
 	"log"
 
@@ -9,14 +11,17 @@ import (
 )
 
 var (
-	pcapFile string = "../demo.pcap"
-	handle   *pcap.Handle
-	err      error
+	handle *pcap.Handle
+	err    error
 )
 
 func main() {
+	pcapFile := flag.String("p", "../modbus.pcap", "Pcap file path")
+	flag.Parse()
+	//flag.PrintDefaults()
+
 	// Open file instead of device
-	handle, err = pcap.OpenOffline(pcapFile)
+	handle, err = pcap.OpenOffline(*pcapFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,6 +30,10 @@ func main() {
 	// Loop through packets in file
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	for packet := range packetSource.Packets() {
-		fmt.Println(packet)
+
+		// fmt.Println(packet.Data())
+		fmt.Println(hex.EncodeToString(packet.Data()))
+		// start := d.hexConvert(data[0:2])
+
 	}
 }

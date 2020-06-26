@@ -35,6 +35,17 @@ func main() {
 }
 
 func printPacketInfo(packet gopacket.Packet) {
+	modbusLayer := packet.Layer(layers.LayerTypeModbusTCP)
+	if modbusLayer != nil {
+		fmt.Println("Modbus layer detected.")
+		modbusPacket, _ := modbusLayer.(*layers.Ethernet)
+		fmt.Println("Source MAC: ", modbusPacket.SrcMAC)
+		fmt.Println("Destination MAC: ", modbusPacket.DstMAC)
+		// Ethernet type is typically IPv4 but could be ARP or other
+		fmt.Println("Ethernet type: ", modbusPacket.EthernetType)
+		fmt.Println()
+	}
+
 	// Let's see if the packet is an ethernet packet
 	ethernetLayer := packet.Layer(layers.LayerTypeEthernet)
 	if ethernetLayer != nil {
